@@ -1,0 +1,46 @@
+{
+  "weekLabel": "10 a 16 de novembro",
+  "updatedAt": "2026-11-10",
+  "shoes": [
+    {
+      "rank": 1,
+      "name": "Fila Racer Speedzone",
+      "brand": "Fila",
+      "affiliateUrl": "https://www.mercadolivre.com.br/fila-racer-speedzone",
+      "image": "/images/shoes/fila-racer.jpg",
+      "bestFor": "ritmos mais rápidos e treinos de qualidade"
+    },
+    {
+      "rank": 2,
+      "name": "Olympikus Corre 4",
+      "brand": "Olympikus",
+      "affiliateUrl": "https://www.mercadolivre.com.br/olympikus-corre-4",
+      "image": "/images/shoes/olympikus-corre.jpg",
+      "bestFor": "volume semanal crescente"
+    },
+    {
+      "rank": 3,
+      "name": "ASICS Dynablast 5",
+      "brand": "ASICS",
+      "affiliateUrl": "https://www.mercadolivre.com.br/asics-dynablast-5",
+      "image": "/images/shoes/asics-dynablast.jpg",
+      "bestFor": "treinos regulares em asfalto"
+    },
+    {
+      "rank": 4,
+      "name": "Mizuno Neo Aura",
+      "brand": "Mizuno",
+      "affiliateUrl": "https://www.mercadolivre.com.br/mizuno-neo-aura",
+      "image": "/images/shoes/mizuno-neo.jpg",
+      "bestFor": "treinos recreativos regulares"
+    },
+    {
+      "rank": 5,
+      "name": "Olympikus Challenger 6",
+      "brand": "Olympikus",
+      "affiliateUrl": "https://www.mercadolivre.com.br/olympikus-challenger",
+      "image": "/images/shoes/olympikus-corre.jpg",
+      "bestFor": "iniciantes e uso cotidiano"
+    }
+  ]
+}
