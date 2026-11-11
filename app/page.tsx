@@ -7,9 +7,13 @@ import { WhatsAppBanner } from "@/components/whatsapp-banner";
 import { getAllPosts, getWeeklyHighlights } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
-export default function HomePage() {
-  const posts = getAllPosts();
-  const weeklyHighlights = getWeeklyHighlights();
+export const instant = false;
+
+export default async function HomePage() {
+  const [posts, weeklyHighlights] = await Promise.all([
+    getAllPosts(),
+    getWeeklyHighlights(),
+  ]);
 
   return (
     <>

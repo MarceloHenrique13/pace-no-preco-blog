@@ -59,7 +59,7 @@ category: tenis
 tags: [ranking, iniciante]
 coverImage: /images/posts/exemplo.jpg
 affiliateDisclosure: true
-draft: false
+draft: true
 shoes:
   - rank: 1
     name: "Nome do modelo"
@@ -76,7 +76,8 @@ faq:
 ### Regras
 
 - `slug` em kebab-case (`a-z`, `0-9`, hífens)
-- `affiliateUrl` deve ser URL válida do Mercado Livre (link de compra real)
+- **Posts novos: sempre `draft: true`.** O post só entra no blog público depois que o admin cola os links afiliados reais e clica **Publicar** em `/admin`
+- `affiliateUrl` no MDX pode ser placeholder do produto no Mercado Livre; o **link afiliado real** (`meli.la` / `mercadolivre.com.br`) é colado no painel `/admin` (não inventar short link)
 - Não mencionar “afiliado”, “comissão” ou “disclosure” no texto visível ao leitor
 - Não inventar specs técnicas (drop, peso, espuma) sem fonte; diga para conferir a ficha
 - Rankings: use a lista `shoes` no frontmatter. O site renderiza os cards automaticamente
@@ -85,6 +86,7 @@ faq:
 - SEO: um H1 via `title`; no corpo use H2/H3; descrição única por post
 - CTAs: “Ver preço”, “Ver no Mercado Livre”, nunca “link de afiliado”
 - FAQ: use `faq` no frontmatter das resenhas (3 a 6 perguntas). O accordion aparece no fim do post; bom para SEO (FAQPage)
+- Destaques da semana: atualizar via `/admin/destaques` (não é obrigatório editar `destaques-semana.json` em produção)
 
 ## Componentes MDX disponíveis
 

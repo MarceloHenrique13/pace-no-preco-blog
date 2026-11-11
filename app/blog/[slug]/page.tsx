@@ -7,7 +7,7 @@ import { PostHeader } from "@/components/post-header";
 import { RelatedPosts } from "@/components/related-posts";
 import { ShoeCard } from "@/components/shoe-card";
 import { WhatsAppBanner } from "@/components/whatsapp-banner";
-import { getAllSlugs, getPostBySlug, getRelatedPosts } from "@/lib/content";
+import { getPostBySlug, getRelatedPosts } from "@/lib/content";
 import {
   articleJsonLd,
   breadcrumbJsonLd,
@@ -16,29 +16,27 @@ import {
   postMetadata,
 } from "@/lib/seo";
 
+export const instant = false;
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
-}
-
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post || post.draft) return {};
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
   return postMetadata(post);
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
-  if (!post || post.draft) notFound();
+  if (!post) notFound();
 
   const shoes = [...post.shoes].sort((a, b) => a.rank - b.rank);
-  const related = getRelatedPosts(post);
+  const related = await getRelatedPosts(post);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-14 md:px-6 md:py-20">

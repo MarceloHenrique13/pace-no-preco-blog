@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostList } from "@/components/post-list";
-import { getAllCategories, getPostsByCategory } from "@/lib/content";
+import { getPostsByCategory } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo";
+
+export const instant = false;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
-
-export function generateStaticParams() {
-  return getAllCategories().map((category) => ({
-    slug: category,
-  }));
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -27,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const category = decodeURIComponent(slug);
-  const posts = getPostsByCategory(category);
+  const posts = await getPostsByCategory(category);
 
   if (!posts.length) notFound();
 

@@ -2,9 +2,11 @@ import type { MetadataRoute } from "next";
 import { getAllCategories, getAllPosts } from "@/lib/content";
 import { absoluteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts();
-  const categories = getAllCategories();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [posts, categories] = await Promise.all([
+    getAllPosts(),
+    getAllCategories(),
+  ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     "",

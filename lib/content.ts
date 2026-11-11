@@ -2,10 +2,20 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
+import { connection } from "next/server";
+import {
+  getWeeklyHighlightsFromStore,
+  listAllOverrides,
+  listOverridesForPost,
+  listPublishedSlugs,
+  seedWeeklyHighlightsIfEmpty,
+} from "@/lib/affiliate-store";
+import { isPostPublic } from "@/lib/publish";
 import {
   postFrontmatterSchema,
   weeklyHighlightsSchema,
   type Post,
+  type Shoe,
   type WeeklyHighlights,
 } from "./schema";
 
@@ -43,59 +53,20 @@ function parsePostFile(filePath: string): Post {
   };
 }
 
-export function getAllPosts({ includeDrafts = false } = {}): Post[] {
-  ensurePostsDir();
-  const files = fs
-    .readdirSync(postsDirectory)
-    .filter((name) => name.endsWith(".mdx") || name.endsWith(".md"));
+export function applyAffiliateOverrides(
+  shoes: Shoe[],
+  overrides: Map<string, string>,
+): Shoe[] {
+  if (!overrides.size) return shoes;
 
-  const posts = files.map((file) => parsePostFile(path.join(postsDirectory, file)));
-
-  return posts
-    .filter((post) => includeDrafts || !post.draft)
-    .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+  return shoes.map((shoe) => {
+    const nextUrl = overrides.get(shoe.name);
+    if (!nextUrl) return shoe;
+    return { ...shoe, affiliateUrl: nextUrl };
+  });
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
-  return getAllPosts({ includeDrafts: true }).find((post) => post.slug === slug);
-}
-
-export function getPostsByCategory(category: string): Post[] {
-  return getAllPosts().filter(
-    (post) => post.category.toLowerCase() === category.toLowerCase(),
-  );
-}
-
-export function getAllCategories(): string[] {
-  const set = new Set(getAllPosts().map((post) => post.category));
-  return Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR"));
-}
-
-export function getAllSlugs(): string[] {
-  return getAllPosts().map((post) => post.slug);
-}
-
-export function getRelatedPosts(post: Post, limit = 3): Post[] {
-  const sameCategory = getAllPosts().filter(
-    (candidate) =>
-      candidate.slug !== post.slug &&
-      candidate.category.toLowerCase() === post.category.toLowerCase(),
-  );
-
-  if (sameCategory.length >= limit) {
-    return sameCategory.slice(0, limit);
-  }
-
-  const extras = getAllPosts().filter(
-    (candidate) =>
-      candidate.slug !== post.slug &&
-      !sameCategory.some((related) => related.slug === candidate.slug),
-  );
-
-  return [...sameCategory, ...extras].slice(0, limit);
-}
-
-export function getWeeklyHighlights(): WeeklyHighlights {
+function readWeeklyHighlightsFile(): WeeklyHighlights {
   if (!fs.existsSync(weeklyHighlightsPath)) {
     throw new Error("Arquivo content/destaques-semana.json não encontrado");
   }
@@ -114,4 +85,143 @@ export function getWeeklyHighlights(): WeeklyHighlights {
     ...parsed.data,
     shoes: [...parsed.data.shoes].sort((a, b) => a.rank - b.rank),
   };
+}
+
+function listMdxPosts(): Post[] {
+  ensurePostsDir();
+  const files = fs
+    .readdirSync(postsDirectory)
+    .filter((name) => name.endsWith(".mdx") || name.endsWith(".md"));
+
+  const posts: Post[] = [];
+  for (const file of files) {
+    try {
+      posts.push(parsePostFile(path.join(postsDirectory, file)));
+    } catch (error) {
+      console.error(`Skipping invalid post file ${file}`, error);
+    }
+  }
+  return posts;
+}
+
+export async function getAllPosts({
+  forAdmin = false,
+}: {
+  forAdmin?: boolean;
+} = {}): Promise<Post[]> {
+  await connection();
+  const [publishedSlugs, overridesByPost] = await Promise.all([
+    listPublishedSlugs(),
+    listAllOverrides(),
+  ]);
+
+  const posts = listMdxPosts()
+    .map((post) => {
+      if (forAdmin) return post;
+      const overrides = overridesByPost.get(post.slug) ?? new Map();
+      return {
+        ...post,
+        shoes: applyAffiliateOverrides(post.shoes, overrides),
+      };
+    })
+    .filter((post) => forAdmin || isPostPublic(post, publishedSlugs))
+    .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+
+  return posts;
+}
+
+export async function getPostBySlug(
+  slug: string,
+  { forAdmin = false }: { forAdmin?: boolean } = {},
+): Promise<Post | undefined> {
+  await connection();
+  const post = listMdxPosts().find((candidate) => candidate.slug === slug);
+  if (!post) return undefined;
+
+  if (!forAdmin) {
+    const publishedSlugs = await listPublishedSlugs();
+    if (!isPostPublic(post, publishedSlugs)) return undefined;
+  }
+
+  if (forAdmin) {
+    return post;
+  }
+
+  const overrides = await listOverridesForPost(slug);
+  return {
+    ...post,
+    shoes: applyAffiliateOverrides(post.shoes, overrides),
+  };
+}
+
+export async function getPostsByCategory(category: string): Promise<Post[]> {
+  const posts = await getAllPosts();
+  return posts.filter(
+    (post) => post.category.toLowerCase() === category.toLowerCase(),
+  );
+}
+
+export async function getAllCategories(): Promise<string[]> {
+  const posts = await getAllPosts();
+  const set = new Set(posts.map((post) => post.category));
+  return Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
+export async function getAllSlugs(): Promise<string[]> {
+  const posts = await getAllPosts();
+  return posts.map((post) => post.slug);
+}
+
+export async function getRelatedPosts(
+  post: Post,
+  limit = 3,
+): Promise<Post[]> {
+  const all = await getAllPosts();
+  const sameCategory = all.filter(
+    (candidate) =>
+      candidate.slug !== post.slug &&
+      candidate.category.toLowerCase() === post.category.toLowerCase(),
+  );
+
+  if (sameCategory.length >= limit) {
+    return sameCategory.slice(0, limit);
+  }
+
+  const extras = all.filter(
+    (candidate) =>
+      candidate.slug !== post.slug &&
+      !sameCategory.some((related) => related.slug === candidate.slug),
+  );
+
+  return [...sameCategory, ...extras].slice(0, limit);
+}
+
+export async function getWeeklyHighlights(): Promise<WeeklyHighlights> {
+  await connection();
+
+  const fromStore = await getWeeklyHighlightsFromStore();
+  if (fromStore) {
+    return {
+      ...fromStore,
+      shoes: [...fromStore.shoes].sort((a, b) => a.rank - b.rank),
+    };
+  }
+
+  const fileData = readWeeklyHighlightsFile();
+
+  try {
+    await seedWeeklyHighlightsIfEmpty(fileData);
+  } catch (error) {
+    console.error("highlight seed failed", error);
+  }
+
+  const seeded = await getWeeklyHighlightsFromStore();
+  if (seeded) {
+    return {
+      ...seeded,
+      shoes: [...seeded.shoes].sort((a, b) => a.rank - b.rank),
+    };
+  }
+
+  return fileData;
 }

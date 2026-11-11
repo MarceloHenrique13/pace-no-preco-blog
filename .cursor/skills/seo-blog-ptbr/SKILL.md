@@ -62,12 +62,15 @@ category: tenis
 tags: [tag1, tag2]
 coverImage: /images/posts/arquivo.jpg
 affiliateDisclosure: true
-draft: false
+draft: true
 shoes: []   # opcional; cards renderizados pelo site
 faq:
   - question: "Pergunta?"
     answer: "Resposta em pt-BR."
 ```
+
+Posts **novos** sempre com `draft: true`. Links afiliados reais entram no `/admin`
+(não inventar `meli.la`). Só depois do Publicar o post aparece no blog.
 
 Corpo em Markdown/MDX. H1 vem do `title` (não repetir H1 no corpo).
 
@@ -83,6 +86,7 @@ Contrato completo: `CONTENT.md`. Schema Zod: `lib/schema.ts`.
 - Tom direto e útil; sem hype vazio
 - CTAs: “Ver preço” / “Ver no Mercado Livre”
 - Não mencionar afiliado, comissão ou disclosure no texto visível
+- `draft: true` em post novo; link afiliado real + Publicar no `/admin`
 
 ## Checklist final
 

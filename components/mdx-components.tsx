@@ -1,6 +1,41 @@
+import type { AnchorHTMLAttributes } from "react";
 import type { MDXComponents } from "mdx/types";
 import { AffiliateCta } from "./affiliate-cta";
 import { ShoeCard } from "./shoe-card";
+
+function isExternalHref(href?: string) {
+  if (!href) return false;
+  return /^(https?:)?\/\//i.test(href) || href.startsWith("mailto:") || href.startsWith("tel:");
+}
+
+function MdxLink({
+  href,
+  children,
+  className,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const external = isExternalHref(href);
+
+  return (
+    <a
+      {...props}
+      href={href}
+      className={
+        className
+          ? `break-words font-medium text-court underline-offset-2 hover:underline ${className}`
+          : "break-words font-medium text-court underline-offset-2 hover:underline"
+      }
+      {...(external
+        ? {
+            target: "_blank",
+            rel: "noopener noreferrer",
+          }
+        : null)}
+    >
+      {children}
+    </a>
+  );
+}
 
 export const mdxComponents: MDXComponents = {
   AffiliateCta,
@@ -26,10 +61,5 @@ export const mdxComponents: MDXComponents = {
   ol: (props) => (
     <ol className="mt-4 list-decimal space-y-2 pl-5 text-muted" {...props} />
   ),
-  a: (props) => (
-    <a
-      className="font-medium text-court underline-offset-2 hover:underline break-words"
-      {...props}
-    />
-  ),
+  a: MdxLink,
 };
