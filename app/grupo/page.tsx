@@ -114,7 +114,7 @@ export default function GrupoPage() {
           </p>
 
           <h1 className="font-display mt-5 text-[clamp(3.25rem,14vw,6.75rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#f0f8ff]">
-            <span className="block">Pace no,</span>
+            <span className="block">Pace no</span>
             <span className="grupo-hero-title-accent block">Preço!</span>
           </h1>
 
