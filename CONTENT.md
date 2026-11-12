@@ -78,6 +78,8 @@ faq:
 - `slug` em kebab-case (`a-z`, `0-9`, hífens)
 - **Posts novos: sempre `draft: true`.** O post só entra no blog público depois que o admin cola os links afiliados reais e clica **Publicar** em `/admin`
 - `affiliateUrl` no MDX pode ser placeholder do produto no Mercado Livre; o **link afiliado real** (`meli.la` / `mercadolivre.com.br`) é colado no painel `/admin` (não inventar short link)
+- Capa e fotos dos tênis podem ser corrigidas no `/admin/posts/[slug]` (upload ou URL); override no Neon, sem editar o MDX de novo
+- Posts novos no `main` disparam deploy de produção (GitHub Action). Merge no `main` — não deixar o rascunho só numa branch
 - Não mencionar “afiliado”, “comissão” ou “disclosure” no texto visível ao leitor
 - Não inventar specs técnicas (drop, peso, espuma) sem fonte; diga para conferir a ficha
 - Rankings: use a lista `shoes` no frontmatter. O site renderiza os cards automaticamente

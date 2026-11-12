@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PostLinksForm } from "@/components/admin/post-links-form";
 import {
+  listImageOverridesForPost,
   listOverridesForPost,
   listPublishedSlugs,
 } from "@/lib/affiliate-store";
@@ -18,8 +19,9 @@ export default async function AdminPostLinksPage({ params }: PageProps) {
   const post = await getPostBySlug(slug, { forAdmin: true });
   if (!post) notFound();
 
-  const [overrides, publishedSlugs] = await Promise.all([
+  const [overrides, imageOverrides, publishedSlugs] = await Promise.all([
     listOverridesForPost(slug),
+    listImageOverridesForPost(slug),
     listPublishedSlugs(),
   ]);
 
@@ -36,11 +38,15 @@ export default async function AdminPostLinksPage({ params }: PageProps) {
         <PostLinksForm
           slug={post.slug}
           publishedViaAdmin={publishedSlugs.has(post.slug)}
+          mdxCoverImage={post.coverImage}
+          overrideCoverImage={imageOverrides.coverImage}
           shoes={post.shoes.map((shoe) => ({
             name: shoe.name,
             brand: shoe.brand,
             mdxUrl: shoe.affiliateUrl,
             overrideUrl: overrides.get(shoe.name) ?? null,
+            mdxImage: shoe.image,
+            overrideImage: imageOverrides.shoes.get(shoe.name) ?? null,
           }))}
         />
       </div>

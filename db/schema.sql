@@ -20,3 +20,13 @@ CREATE TABLE IF NOT EXISTS post_publications (
   post_slug text PRIMARY KEY,
   published_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- target: '__cover__' for post coverImage, or exact shoes[].name for shoe image
+CREATE TABLE IF NOT EXISTS post_image_overrides (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_slug text NOT NULL,
+  target text NOT NULL,
+  image_url text NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (post_slug, target)
+);

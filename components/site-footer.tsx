@@ -20,6 +20,12 @@ export function SiteFooter() {
           </Link>
         </div>
       </div>
+      <div className="mx-auto max-w-6xl border-t border-line px-4 py-5 md:px-6">
+        <p className="max-w-[62ch] text-xs leading-relaxed text-muted">
+          Participamos de programas de afiliados: podemos receber comissão por compras
+          feitas pelos links, sem custo extra para você.
+        </p>
+      </div>
     </footer>
   );
 }
