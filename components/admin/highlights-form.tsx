@@ -1,6 +1,8 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { useState } from "react";
+import { compressImageForUpload } from "@/lib/compress-image";
 import type { WeeklyHighlights } from "@/lib/schema";
 
 type Props = {
@@ -17,11 +19,34 @@ export function HighlightsForm({ initial }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [uploadingRank, setUploadingRank] = useState<number | null>(null);
 
   function updateShoe(index: number, patch: Partial<ShoeDraft>) {
     setShoes((prev) =>
       prev.map((shoe, i) => (i === index ? { ...shoe, ...patch } : shoe)),
     );
+  }
+
+  async function onPickImage(index: number, file: File | null) {
+    if (!file) return;
+    setUploadingRank(shoes[index]?.rank ?? null);
+    setError(null);
+    setMessage(null);
+    try {
+      const prepared = await compressImageForUpload(file);
+      const blob = await upload(`highlights/${prepared.name}`, prepared, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload",
+      });
+      updateShoe(index, { image: blob.url });
+      setMessage("Imagem enviada. Clique em Salvar destaques para publicar.");
+    } catch {
+      setError(
+        "Não foi possível enviar a imagem. Confira o login e tente de novo.",
+      );
+    } finally {
+      setUploadingRank(null);
+    }
   }
 
   return (
@@ -91,6 +116,26 @@ export function HighlightsForm({ initial }: Props) {
               />
             </label>
           ))}
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              Ou enviar imagem do celular/PC
+            </span>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              disabled={uploadingRank !== null || pending}
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                void onPickImage(index, file);
+                event.target.value = "";
+              }}
+              className="block w-full text-sm text-muted file:mr-3 file:rounded-full file:border-0 file:bg-court file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+            />
+            {uploadingRank === shoe.rank ? (
+              <p className="mt-2 text-sm text-muted">Enviando e comprimindo…</p>
+            ) : null}
+          </label>
         </fieldset>
       ))}
 
@@ -99,7 +144,7 @@ export function HighlightsForm({ initial }: Props) {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || uploadingRank !== null}
         className="inline-flex min-h-11 items-center justify-center rounded-full bg-court px-5 text-sm font-semibold text-white disabled:opacity-60"
       >
         {pending ? "Salvando…" : "Salvar destaques"}

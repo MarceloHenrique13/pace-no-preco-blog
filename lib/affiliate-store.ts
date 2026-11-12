@@ -200,3 +200,99 @@ export async function listAllOverrides(): Promise<
 
   return byPost;
 }
+
+/** Cover image override key in post_image_overrides.target */
+export const COVER_IMAGE_TARGET = "__cover__";
+
+export type PostImageOverrides = {
+  coverImage: string | null;
+  shoes: Map<string, string>;
+};
+
+export async function listImageOverridesForPost(
+  slug: string,
+): Promise<PostImageOverrides> {
+  const empty: PostImageOverrides = { coverImage: null, shoes: new Map() };
+  const sql = getSql();
+  if (!sql) return empty;
+
+  try {
+    const rows = (await sql`
+      SELECT target, image_url
+      FROM post_image_overrides
+      WHERE post_slug = ${slug}
+    `) as { target: string; image_url: string }[];
+
+    const shoes = new Map<string, string>();
+    let coverImage: string | null = null;
+    for (const row of rows) {
+      if (row.target === COVER_IMAGE_TARGET) {
+        coverImage = row.image_url;
+      } else {
+        shoes.set(row.target, row.image_url);
+      }
+    }
+    return { coverImage, shoes };
+  } catch (error) {
+    console.error("listImageOverridesForPost failed", error);
+    return empty;
+  }
+}
+
+export async function listAllImageOverrides(): Promise<
+  Map<string, PostImageOverrides>
+> {
+  const byPost = new Map<string, PostImageOverrides>();
+  const sql = getSql();
+  if (!sql) return byPost;
+
+  try {
+    const rows = (await sql`
+      SELECT post_slug, target, image_url
+      FROM post_image_overrides
+    `) as { post_slug: string; target: string; image_url: string }[];
+
+    for (const row of rows) {
+      const current = byPost.get(row.post_slug) ?? {
+        coverImage: null,
+        shoes: new Map<string, string>(),
+      };
+      if (row.target === COVER_IMAGE_TARGET) {
+        current.coverImage = row.image_url;
+      } else {
+        current.shoes.set(row.target, row.image_url);
+      }
+      byPost.set(row.post_slug, current);
+    }
+  } catch (error) {
+    console.error("listAllImageOverrides failed", error);
+  }
+
+  return byPost;
+}
+
+export async function upsertImageOverrides(
+  slug: string,
+  items: { target: string; imageUrl: string | null }[],
+): Promise<void> {
+  const sql = getSql();
+  if (!sql) throw new Error("DATABASE_URL não configurada");
+
+  for (const item of items) {
+    const url = item.imageUrl?.trim() ?? "";
+    if (!url) {
+      await sql`
+        DELETE FROM post_image_overrides
+        WHERE post_slug = ${slug} AND target = ${item.target}
+      `;
+      continue;
+    }
+
+    await sql`
+      INSERT INTO post_image_overrides (post_slug, target, image_url, updated_at)
+      VALUES (${slug}, ${item.target}, ${url}, now())
+      ON CONFLICT (post_slug, target)
+      DO UPDATE SET image_url = EXCLUDED.image_url, updated_at = now()
+    `;
+  }
+}

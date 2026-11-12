@@ -5,10 +5,13 @@ import readingTime from "reading-time";
 import { connection } from "next/server";
 import {
   getWeeklyHighlightsFromStore,
+  listAllImageOverrides,
   listAllOverrides,
+  listImageOverridesForPost,
   listOverridesForPost,
   listPublishedSlugs,
   seedWeeklyHighlightsIfEmpty,
+  type PostImageOverrides,
 } from "@/lib/affiliate-store";
 import { isPostPublic } from "@/lib/publish";
 import {
@@ -66,6 +69,41 @@ export function applyAffiliateOverrides(
   });
 }
 
+export function applyImageOverrides(
+  post: Post,
+  images: PostImageOverrides,
+): Post {
+  const coverImage = images.coverImage?.trim() || post.coverImage;
+  const shoes =
+    images.shoes.size === 0
+      ? post.shoes
+      : post.shoes.map((shoe) => {
+          const nextImage = images.shoes.get(shoe.name);
+          if (!nextImage) return shoe;
+          return { ...shoe, image: nextImage };
+        });
+
+  if (coverImage === post.coverImage && shoes === post.shoes) {
+    return post;
+  }
+
+  return { ...post, coverImage, shoes };
+}
+
+function mergePostOverrides(
+  post: Post,
+  affiliate: Map<string, string>,
+  images: PostImageOverrides,
+): Post {
+  return applyImageOverrides(
+    {
+      ...post,
+      shoes: applyAffiliateOverrides(post.shoes, affiliate),
+    },
+    images,
+  );
+}
+
 function readWeeklyHighlightsFile(): WeeklyHighlights {
   if (!fs.existsSync(weeklyHighlightsPath)) {
     throw new Error("Arquivo content/destaques-semana.json não encontrado");
@@ -110,19 +148,21 @@ export async function getAllPosts({
   forAdmin?: boolean;
 } = {}): Promise<Post[]> {
   await connection();
-  const [publishedSlugs, overridesByPost] = await Promise.all([
+  const [publishedSlugs, overridesByPost, imagesByPost] = await Promise.all([
     listPublishedSlugs(),
     listAllOverrides(),
+    listAllImageOverrides(),
   ]);
 
   const posts = listMdxPosts()
     .map((post) => {
       if (forAdmin) return post;
       const overrides = overridesByPost.get(post.slug) ?? new Map();
-      return {
-        ...post,
-        shoes: applyAffiliateOverrides(post.shoes, overrides),
+      const images = imagesByPost.get(post.slug) ?? {
+        coverImage: null,
+        shoes: new Map(),
       };
+      return mergePostOverrides(post, overrides, images);
     })
     .filter((post) => forAdmin || isPostPublic(post, publishedSlugs))
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
@@ -147,11 +187,11 @@ export async function getPostBySlug(
     return post;
   }
 
-  const overrides = await listOverridesForPost(slug);
-  return {
-    ...post,
-    shoes: applyAffiliateOverrides(post.shoes, overrides),
-  };
+  const [overrides, images] = await Promise.all([
+    listOverridesForPost(slug),
+    listImageOverridesForPost(slug),
+  ]);
+  return mergePostOverrides(post, overrides, images);
 }
 
 export async function getPostsByCategory(category: string): Promise<Post[]> {

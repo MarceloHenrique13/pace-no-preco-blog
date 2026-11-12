@@ -45,3 +45,8 @@ next-env.d.ts
 
 # agent execution scratch
 .superpowers/
+
+# env files (keep .env.example tracked)
+.env
+.env.*
+!.env.example
