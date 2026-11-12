@@ -37,7 +37,7 @@ Sempre **exatamente 5 tênis**. Atualize `weekLabel`, `updatedAt`, imagens e lin
 }
 ```
 
-São sempre 5 itens. `affiliateUrl` de rascunho novo usa o placeholder acima. O link real o Marcelo cola no `/admin`, não no JSON, a menos que ele tenha informado a URL e aprovado a gravação.
+São sempre 5 itens. O bloguio regrava este arquivo toda segunda-feira (horário de Brasília), com `weekLabel` de segunda a domingo. `affiliateUrl` de rascunho novo usa o placeholder acima. O link real o Marcelo cola no `/admin`. No ar, a home usa o que está salvo no admin; este JSON é a lista da semana e o fallback se o banco estiver vazio.
 
 ## Posts do blog
 

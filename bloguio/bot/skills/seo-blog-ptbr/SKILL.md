@@ -20,7 +20,11 @@ Antes de criar ou revisar `content/posts/*.mdx`. Não altera layout, componente 
 3. Feche uma keyword principal (frase de busca BR), a intenção e 3 a 5 secundárias.
 4. O slug novo não pode repetir slug já listado.
 
-No schedule, não espere confirmação: escolha o gap e escreva o rascunho. Se um humano pedir algo ambíguo fora do schedule, pergunte a keyword antes de gravar.
+No schedule de posts, não espere confirmação: escolha o gap e escreva o rascunho. Não chame `write_highlights` nesse schedule. Se um humano pedir algo ambíguo fora do schedule, pergunte a keyword antes de gravar.
+
+## Destaques da semana
+
+O schedule `destaques-semana` roda na segunda. Leia `content/destaques-semana.json`, escolha 5 tênis de corrida no Brasil e grave com `write_highlights`. Exatamente 5. `affiliateUrl` só com o placeholder. Foto incerta vira `/images/shoes/pendente-<slug-do-nome>.jpg`. O rótulo da semana é calculado pela tool. Feche com `aguardando aprovação humana (links)`.
 
 ## Formato
 

@@ -23,7 +23,7 @@ Tema viral, fraco em busca ou fora de corrida: descarte.
 Só pelas tools, e só nestes caminhos:
 
 - `content/posts/<slug>.mdx`
-- `content/destaques-semana.json`, somente se o Marcelo pedir
+- `content/destaques-semana.json` toda segunda (schedule `destaques-semana`) e quando o Marcelo pedir a lista da home
 - `public/images/posts/` e `public/images/shoes/`, só com arquivo real do modelo exato
 
 Não peça e não tente editar `app/`, `components/`, layout, `lib/` nem configuração. Não faça commit, push, deploy nem mude `draft` para `false`.
@@ -72,6 +72,17 @@ aguardando aprovação humana (links)
 ```
 
 Os três bullets dizem o ângulo, o que ficou pendente (foto ou link) e o que o Marcelo confere no `/admin`.
+
+## Destaques da semana
+
+A home mostra 5 tênis. Toda segunda o schedule `destaques-semana` troca essa lista. No chat, faça o mesmo se o Marcelo pedir.
+
+1. Leia `content/destaques-semana.json`.
+2. Escolha 5 tênis de corrida com presença no Brasil, diferentes da lista atual quando der.
+3. `write_highlights` com exatamente 5 itens e o placeholder de afiliado. Sem a foto certa, use o caminho `pendente-`. A tool grava o rótulo segunda–domingo e a data de hoje em America/Sao_Paulo.
+4. Responda o rótulo, os 5 nomes, o path, as fotos pendentes e a linha `aguardando aprovação humana (links)`.
+
+O schedule de posts não mexe nessa lista. Os links reais continuam no `/admin`. Em produção a home usa o que está salvo lá; o JSON é a lista da semana e o fallback.
 
 ## Memória
 

@@ -2,9 +2,14 @@ import { writeFileSync } from "node:fs";
 import { defineTool } from "@grok/agent-sdk/tools";
 import { prompt } from "@grok/agent-sdk";
 import { z } from "zod/v4";
-import { AFFILIATE_PLACEHOLDER, classifyAffiliateUrl } from "../lib/affiliates.js";
+import {
+  AFFILIATE_PLACEHOLDER,
+  classifyAffiliateUrl,
+  requestsProvidedAffiliate,
+} from "../lib/affiliates.js";
 import { checkImageReference } from "../lib/images.js";
 import { blogPaths } from "../lib/paths.js";
+import { saoPauloWeek } from "../lib/week.js";
 
 const shoeSchema = z.object({
   rank: z.number().int().min(1).max(5),
@@ -17,12 +22,13 @@ const shoeSchema = z.object({
 
 export default defineTool({
   description: prompt`
-    Atualiza content/destaques-semana.json. Só chame se o Marcelo pedir os destaques da semana.
-    Exige aprovação humana. Sempre 5 tênis. Sem link inventado: use ${AFFILIATE_PLACEHOLDER}
-    a menos que ele tenha colado a URL e aprovado esta chamada.
+    Atualiza content/destaques-semana.json com exatamente 5 tênis.
+    Chame no schedule destaques-semana (toda segunda) e quando o Marcelo pedir a lista da home.
+    Sem link inventado: use ${AFFILIATE_PLACEHOLDER}. O rótulo da semana e a data são gravados em America/Sao_Paulo.
+    Link real só se ele colou a URL e uma pessoa aprovar esta chamada.
   `,
   effect: "write",
-  needsApproval: true,
+  needsApproval: (input) => requestsProvidedAffiliate(input),
   inputSchema: z.object({
     weekLabel: z.string().min(1),
     updatedAt: z.string(),
@@ -32,20 +38,17 @@ export default defineTool({
   dryRunResult: { ok: false, persisted: false, dryRun: true },
   async execute(input, ctx) {
     const errors: string[] = [];
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(input.updatedAt)) {
-      errors.push("updatedAt no formato YYYY-MM-DD.");
-    }
     const ranks = new Set(input.shoes.map((shoe) => shoe.rank));
     if (ranks.size !== 5) errors.push("Destaques precisam dos ranks 1 a 5, sem repetir.");
-  const paths = blogPaths();
-  const shoes: Array<{
-    rank: number;
-    name: string;
-    brand: string;
-    affiliateUrl: string;
-    image: string;
-    bestFor: string;
-  }> = [];
+    const paths = blogPaths();
+    const shoes: Array<{
+      rank: number;
+      name: string;
+      brand: string;
+      affiliateUrl: string;
+      image: string;
+      bestFor: string;
+    }> = [];
     const images = new Set<string>();
     for (const shoe of input.shoes) {
       const affiliate = classifyAffiliateUrl(shoe.affiliateUrl, input.linksInformadosPeloMarcelo);
@@ -78,9 +81,10 @@ export default defineTool({
     if (errors.length > 0 || shoes.length !== 5) {
       return { ok: false as const, errors };
     }
+    const week = saoPauloWeek();
     const payload = {
-      weekLabel: input.weekLabel.trim(),
-      updatedAt: input.updatedAt,
+      weekLabel: week.weekLabel,
+      updatedAt: week.updatedAt,
       shoes: shoes.sort((a, b) => a.rank - b.rank),
     };
     const persist = ctx.session.purpose !== "eval" && ctx.session.dryRun !== true;
@@ -90,6 +94,9 @@ export default defineTool({
     return {
       ok: true as const,
       path: "content/destaques-semana.json",
+      weekLabel: payload.weekLabel,
+      updatedAt: payload.updatedAt,
+      shoeCount: payload.shoes.length,
       persisted: persist,
       approvalLine: "aguardando aprovação humana (links)",
     };

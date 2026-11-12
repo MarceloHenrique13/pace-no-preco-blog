@@ -12,7 +12,7 @@ Por que aqui:
 Caminhos em que o bloguio pode gravar:
 
 - `content/posts/<slug>.mdx`
-- `content/destaques-semana.json`, só quando o Marcelo pedir (a tool exige aprovação)
+- `content/destaques-semana.json` toda segunda, e também quando o Marcelo pedir. Link real de afiliado continua atrás de aprovação
 - `public/images/posts/` e `public/images/shoes/`, só com arquivo de imagem real (bytes), nunca baixado do Mercado Livre
 
 Fora disso, inclusive `app/`, `components/`, `layout` e `lib/`, a tool recusa.
@@ -40,10 +40,11 @@ bloguio/
 │   │   ├── list_posts.ts            inventário (leitura)
 │   │   ├── read_blog_file.ts        lê só contrato, posts, destaques e imagens
 │   │   ├── write_post.ts            grava o rascunho, com os gates
-│   │   ├── write_highlights.ts      destaques; aprovação humana sempre
+│   │   ├── write_highlights.ts      destaques da semana; data em America/Sao_Paulo
 │   │   └── save_image.ts            grava jpg/png local; não faz HTTP
 │   ├── skills/seo-blog-ptbr/SKILL.md
 │   ├── schedules/rascunho-corrida.md
+│   ├── schedules/destaques-semana.md
 │   ├── channels/slack.ts            opcional; idle sem token
 │   └── hooks/memory.ts              diário da sessão, gerado pelo init
 └── evals/
@@ -72,9 +73,10 @@ Nada em `app/`, `components/`, `lib/` ou em post já publicado.
 | `bot/tools/list_posts.ts` | Passo 1 do fluxo: slugs, títulos, draft e arquivos de imagem já existentes. |
 | `bot/tools/read_blog_file.ts` | Lê `CONTENT.md`, um post, os destaques ou uma imagem listada. Não lê `app/` nem `lib/`. |
 | `bot/tools/write_post.ts` | Única forma de criar o MDX. Em sessão de eval não grava no disco. |
-| `bot/tools/write_highlights.ts` | JSON dos destaques. `needsApproval: true`, porque o arquivo é fallback da home. |
+| `bot/tools/write_highlights.ts` | JSON dos destaques. Grava o rótulo segunda–domingo em America/Sao_Paulo. Link real só com aprovação. |
 | `bot/tools/save_image.ts` | Recebe bytes já em mãos (jpg/png, lado mínimo 320px) e grava em `public/images/posts` ou `public/images/shoes`. Sem fetch. |
-| `bot/schedules/rascunho-corrida.md` | Cron 3× por semana. O SDK só aceita cron em UTC. `0 12 * * 1,3,5` = segunda, quarta e sexta, 09:00 em `America/Sao_Paulo` (UTC−3, sem horário de verão desde 2019). |
+| `bot/schedules/rascunho-corrida.md` | Posts, 3× por semana. Cron em UTC: `0 12 * * 1,3,5` = segunda, quarta e sexta, 09:00 em `America/Sao_Paulo`. |
+| `bot/schedules/destaques-semana.md` | Home, 1× por semana. Cron em UTC: `0 11 * * 1` = segunda, 08:00 em `America/Sao_Paulo`. Sempre 5 tênis. |
 | `bot/channels/slack.ts` | Canal Slack com prefixo `BLOGUIO`. Sem `BLOGUIO_SLACK_BOT_TOKEN` e `BLOGUIO_SLACK_APP_TOKEN` o canal sobe idle. Este PR não roda `slack create`. |
 | `bot/hooks/memory.ts` | Hook padrão do `init`. O diário não é fonte de preço, spec nem link. |
 | `evals/smoke.eval.ts` | Um turno: inventário + `write_post`. Confere frontmatter válido, `draft: true`, slug kebab-case diferente do post que já existe, 5 tênis e só o placeholder. |
