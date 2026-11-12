@@ -39,14 +39,15 @@ Defina e confirme com o usuário se estiver ambíguo:
 
 ## Requisitos SEO por post
 
-- **Meta description** até ~155 caracteres
+- **Meta description** de 120 a 160 caracteres
 - **Slug** sem acento, kebab-case (`a-z`, `0-9`, hífens)
 - **2 a 4 links internos** para posts que existem de verdade em
   `content/posts/` (nunca inventar slug)
 - **Imagem de capa** com `coverImage` e alt descritivo no componente/contexto
-- **Autor** identificado, **data de publicação** e **data de atualização**
+- **Data de publicação** e **data de atualização** no frontmatter. O autor do Article é o do site (`Pace no Preço` em `lib/site.ts`); o MDX não tem campo `author`
 - Citar fontes confiáveis; **nunca inventar** dados ou estatísticas
-- Specs técnicas (drop, peso, espuma): só com fonte; senão orientar a conferir a ficha
+- Specs técnicas (drop, peso, espuma) e preço: só com fonte pública fora do Mercado Livre. Sem fonte, não inventar e orientar a conferir a ficha
+- Não acessar, raspar ou baixar dado ou imagem de página do Mercado Livre
 
 ## Formato do projeto
 
@@ -55,7 +56,7 @@ Arquivo: `content/posts/<slug>.mdx`
 ```yaml
 title: "Título com a keyword principal"
 slug: slug-sem-acento
-description: "Meta description até ~155 caracteres"
+description: "Meta description de 120 a 160 caracteres"
 publishedAt: YYYY-MM-DD
 updatedAt: YYYY-MM-DD
 category: tenis
@@ -69,8 +70,17 @@ faq:
     answer: "Resposta em pt-BR."
 ```
 
-Posts **novos** sempre com `draft: true`. Links afiliados reais entram no `/admin`
-(não inventar `meli.la`). Só depois do Publicar o post aparece no blog.
+Posts **novos** sempre com `draft: true`. Não inventar `meli.la` nem URL de
+`mercadolivre.com.br`. Em `affiliateUrl`, usar
+`https://pendente.invalid/PENDENTE_LINK_AFILIADO` (o schema exige URL; o token
+solto faz o post ser ignorado e ele não aparece no `/admin`). Link real só se
+o Marcelo informar a URL. Ele confere e clica Publicar no `/admin`.
+
+Ranking no formato "Os 5 melhores…": exatamente 5 itens em `shoes`. A foto de
+`shoes[].image` tem de ser o modelo de `shoes[].name` (o alt do card é
+`marca + nome`). Sem o arquivo certo, usar
+`/images/shoes/pendente-<slug-do-nome>.jpg` e sinalizar. Não reutilizar a foto
+de outro modelo.
 
 Corpo em Markdown/MDX. H1 vem do `title` (não repetir H1 no corpo).
 
@@ -91,7 +101,7 @@ Contrato completo: `CONTENT.md`. Schema Zod: `lib/schema.ts`.
 ## Checklist final
 
 - [ ] Keyword no `title`, no H1 (via title) e no primeiro parágrafo
-- [ ] `description` ≤ ~155 caracteres
+- [ ] `description` entre 120 e 160 caracteres
 - [ ] Slug kebab-case sem acento
 - [ ] 2–4 links internos reais
 - [ ] Capas/imagens com alt descritivo

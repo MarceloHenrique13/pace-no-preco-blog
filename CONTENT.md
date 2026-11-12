@@ -29,13 +29,15 @@ Sempre **exatamente 5 tênis**. Atualize `weekLabel`, `updatedAt`, imagens e lin
       "rank": 1,
       "name": "Modelo",
       "brand": "Marca",
-      "affiliateUrl": "https://www.mercadolivre.com.br/...",
-      "image": "/images/shoes/modelo.jpg",
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/pendente-modelo.jpg",
       "bestFor": "perfil do corredor"
     }
   ]
 }
 ```
+
+São sempre 5 itens. O bloguio regrava este arquivo toda segunda-feira (horário de Brasília), com `weekLabel` de segunda a domingo. `affiliateUrl` de rascunho novo usa o placeholder acima. O link real o Marcelo cola no `/admin`. No ar, a home usa o que está salvo no admin; este JSON é a lista da semana e o fallback se o banco estiver vazio.
 
 ## Posts do blog
 
@@ -52,20 +54,20 @@ Sempre **exatamente 5 tênis**. Atualize `weekLabel`, `updatedAt`, imagens e lin
 ```yaml
 title: "Título SEO claro"
 slug: titulo-seo-claro
-description: "Meta description de 120-160 caracteres"
+description: "Meta description de 120-160 caracteres, com a frase que a pessoa pesquisaria no Google Brasil."
 publishedAt: 2026-11-10
 updatedAt: 2026-11-10
 category: tenis
 tags: [ranking, iniciante]
-coverImage: /images/posts/exemplo.jpg
+coverImage: /images/posts/pendente-titulo-seo-claro.jpg
 affiliateDisclosure: true
 draft: true
 shoes:
   - rank: 1
     name: "Nome do modelo"
     brand: Marca
-    affiliateUrl: "https://www.mercadolivre.com.br/..."
-    image: /images/shoes/modelo.jpg
+    affiliateUrl: "https://pendente.invalid/PENDENTE_LINK_AFILIADO"
+    image: /images/shoes/pendente-nome-do-modelo.jpg
     pros: ["ponto forte"]
     bestFor: "perfil do corredor"
 faq:
@@ -77,10 +79,13 @@ faq:
 
 - `slug` em kebab-case (`a-z`, `0-9`, hífens)
 - **Posts novos: sempre `draft: true`.** O post só entra no blog público depois que o admin cola os links afiliados reais e clica **Publicar** em `/admin`
-- `affiliateUrl` no MDX pode ser placeholder do produto no Mercado Livre; o **link afiliado real** (`meli.la` / `mercadolivre.com.br`) é colado no painel `/admin` (não inventar short link)
+- `affiliateUrl` de rascunho: `https://pendente.invalid/PENDENTE_LINK_AFILIADO`. O schema exige URL (`z.string().url()`). O token solto `PENDENTE_LINK_AFILIADO` invalida o arquivo, o parser ignora o post e ele não aparece no `/admin`. O host `pendente.invalid` não passa na allowlist de afiliado
+- Não gerar, inventar ou adivinhar `meli.la` nem URL de `mercadolivre.com.br`. Link real só se o Marcelo informar a URL exata. Mesmo assim ele confere e publica no `/admin`
+- Não acessar, raspar ou extrair dado ou imagem de página do Mercado Livre. Spec e preço só com fonte pública fora do ML (marca, loja oficial, review brasileiro). Sem fonte, não inventar
+- Foto de tênis tem de ser do modelo exato (`shoes[].image` = `shoes[].name`, e a capa se for o mesmo modelo). Sem certeza, usar `/images/shoes/pendente-<slug-do-nome>.jpg` e sinalizar. Nunca baixar imagem do Mercado Livre
 - Não mencionar “afiliado”, “comissão” ou “disclosure” no texto visível ao leitor
 - Não inventar specs técnicas (drop, peso, espuma) sem fonte; diga para conferir a ficha
-- Rankings: use a lista `shoes` no frontmatter. O site renderiza os cards automaticamente
+- Rankings: exatamente 5 itens em `shoes`. O site renderiza os cards e ordena pelo `rank`. O alt do card é `marca + nome`
 - Não usar campo `cons` / “Atenção” nos tênis; só `pros` e `bestFor`
 - Tom: direto, útil, em português do Brasil. Sem hype vazio
 - SEO: um H1 via `title`; no corpo use H2/H3; descrição única por post
