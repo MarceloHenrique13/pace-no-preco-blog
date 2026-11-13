@@ -75,7 +75,11 @@ Objetivo: saber quantos visitantes da `/grupo` clicam em "Entrar no grupo".
 - **Avisos de LF/CRLF** do git no Windows são normais.
 - **Conteúdo do Cursor/Grok** entra por PRs em branches `cursor/*`; após merge, `git pull --rebase origin main` antes de dar push.
 
-## 8. Comandos úteis
+## 8. Favicon
+
+Ícone de tênis em movimento (Phosphor `SneakerMove`, branco sobre `#1b3d2f`). Fonte: `app/icon.svg`. `app/apple-icon.png` e `app/favicon.ico` são gerados dele: `node scripts/generate-icons.mjs` (rode de novo se mudar o SVG).
+
+## 9. Comandos úteis
 
 ```bash
 npm run dev          # desenvolvimento
