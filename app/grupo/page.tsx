@@ -7,6 +7,7 @@ import {
   Ticket,
   WhatsappLogo,
 } from "@phosphor-icons/react/dist/ssr";
+import { GroupLink } from "@/components/group-link";
 import { Reveal } from "@/components/reveal";
 import { buildMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
@@ -79,15 +80,16 @@ const reasons = [
 function GroupCta({
   label,
   className,
+  placement,
 }: {
   label: string;
   className?: string;
+  placement: string;
 }) {
   return (
-    <a
+    <GroupLink
       href={siteConfig.whatsappUrl}
-      target="_blank"
-      rel="noopener noreferrer"
+      placement={placement}
       className={
         className ??
         "btn-press inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-court px-6 py-3.5 text-sm font-semibold text-white sm:w-auto"
@@ -95,7 +97,7 @@ function GroupCta({
     >
       <WhatsappLogo weight="fill" className="size-5" aria-hidden />
       {label}
-    </a>
+    </GroupLink>
   );
 }
 
@@ -169,6 +171,7 @@ export default function GrupoPage() {
 
           <GroupCta
             label="Entrar no grupo"
+            placement="topo"
             className="grupo-hero-cta btn-press mt-7 inline-flex min-h-12 w-full max-w-xs items-center justify-center gap-2 rounded-full bg-gradient-to-br from-[#1b3d2f] via-[#2a5c44] to-[#3aa86f] px-8 py-3.5 text-sm font-bold tracking-[0.08em] text-white uppercase sm:w-auto"
           />
           <p className="mt-3 text-sm font-medium tracking-wide text-[#5ecf8e]">
@@ -292,6 +295,7 @@ export default function GrupoPage() {
             <div className="relative mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <GroupCta
                 label="Entrar no grupo agora"
+                placement="rodape"
                 className="btn-press inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-court sm:w-auto"
               />
               <p className="text-sm text-white/75">Grátis. Para sempre. Só ofertas de tênis.</p>

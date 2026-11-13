@@ -30,3 +30,14 @@ CREATE TABLE IF NOT EXISTS post_image_overrides (
   updated_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (post_slug, target)
 );
+
+-- Contagem de cliques no botão do grupo (criada também sob demanda em /api/track)
+CREATE TABLE IF NOT EXISTS page_events (
+  id bigserial PRIMARY KEY,
+  event text NOT NULL,
+  placement text,
+  path text,
+  utm_content text,
+  utm_campaign text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);

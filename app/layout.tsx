@@ -3,6 +3,7 @@ import { Barlow_Condensed, DM_Sans } from "next/font/google";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { VercelAnalytics } from "@/components/vercel-analytics";
 import { buildMetadata, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <VercelAnalytics />
       </body>
     </html>
   );
