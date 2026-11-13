@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { GroupClickStatsPanel } from "@/components/admin/group-click-stats";
 import { requireAdminPage } from "@/lib/admin-guard";
+import { getGroupClickStats } from "@/lib/page-events";
 
 export default async function AdminHomePage() {
   await requireAdminPage();
+  const clickStats = await getGroupClickStats();
 
   return (
     <div className="space-y-6">
@@ -29,6 +32,7 @@ export default async function AdminHomePage() {
           </p>
         </Link>
       </div>
+      <GroupClickStatsPanel stats={clickStats} />
     </div>
   );
 }

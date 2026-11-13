@@ -28,10 +28,11 @@ Veja [CONTENT.md](./CONTENT.md). Posts ficam em `content/posts/*.mdx`.
 
 ## Deploy (Vercel)
 
-1. Importe o repositório do **Pace no Preço**
-2. Defina **Root Directory** = `Blog`
-3. Variáveis: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP_URL`
-4. Deploy
+Push em `main` publica em produção pela **integração Git da Vercel** (projeto `pace-no-preco-blog`, Root Directory `Blog`). Não há workflow de deploy no GitHub Actions. Publicação manual: `vercel deploy --prod --yes`.
+
+Variáveis: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP_URL`, `DATABASE_URL` e as do admin (ver `.env.example`).
+
+Detalhes, medição de cliques e contexto dos anúncios: [docs/PROJETO.md](./docs/PROJETO.md).
 
 Conta Vercel / GitHub: use `marcelohenriqueavs@gmail.com`.
 
