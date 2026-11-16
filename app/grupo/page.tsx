@@ -62,18 +62,18 @@ const reasons = [
   },
   {
     number: "02",
-    title: "Grupo fechado",
-    description: "Acesso limitado a quem quer aproveitar estoque com desconto real.",
+    title: "Grupo gratuito",
+    description: "Entrar não custa nada. Você só recebe as ofertas, direto no WhatsApp.",
   },
   {
     number: "03",
-    title: "Vagas limitadas",
-    description: "Quando encher, abre fila de espera. Quem entra primeiro, aproveita.",
+    title: "Aviso na hora",
+    description: "Quando aparece uma oferta boa de tênis, a gente manda no grupo.",
   },
   {
     number: "04",
-    title: "Saiu, perdeu",
-    description: "Quem sai precisa pedir de novo — e só entra se ainda tiver vaga.",
+    title: "Sem compromisso",
+    description: "Se não gostar, é só sair do grupo quando quiser.",
   },
 ] as const;
 
@@ -95,7 +95,7 @@ function GroupCta({
         "btn-press inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-court px-6 py-3.5 text-sm font-semibold text-white sm:w-auto"
       }
     >
-      <WhatsappLogo weight="fill" className="size-5" aria-hidden />
+      <WhatsappLogo weight="fill" className="size-6" aria-hidden />
       {label}
     </GroupLink>
   );
@@ -112,7 +112,7 @@ export default function GrupoPage() {
               className="grupo-hero-badge-dot size-1.5 rounded-full bg-[#5ecf8e] shadow-[0_0_6px_#5ecf8e]"
               aria-hidden
             />
-            Grupo fechado · Vagas limitadas
+            Grupo gratuito · Só ofertas de tênis
           </p>
 
           <h1 className="font-display mt-5 text-[clamp(3.25rem,14vw,6.75rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#f0f8ff]">
@@ -172,10 +172,10 @@ export default function GrupoPage() {
           <GroupCta
             label="Entrar no grupo"
             placement="topo"
-            className="grupo-hero-cta btn-press mt-7 inline-flex min-h-12 w-full max-w-xs items-center justify-center gap-2 rounded-full bg-gradient-to-br from-[#1b3d2f] via-[#2a5c44] to-[#3aa86f] px-8 py-3.5 text-sm font-bold tracking-[0.08em] text-white uppercase sm:w-auto"
+            className="grupo-hero-cta btn-press mt-7 inline-flex min-h-16 w-full max-w-sm items-center justify-center gap-3 rounded-full bg-gradient-to-br from-[#1b3d2f] via-[#2a5c44] to-[#3aa86f] px-10 py-5 text-base font-bold tracking-[0.08em] text-white uppercase sm:w-auto"
           />
           <p className="mt-3 text-sm font-medium tracking-wide text-[#5ecf8e]">
-            Vagas limitadas! Já garante a sua.
+            Grátis. Você entra em segundos pelo WhatsApp.
           </p>
         </div>
       </section>
@@ -283,20 +283,19 @@ export default function GrupoPage() {
               aria-hidden
             />
             <p className="text-sm font-semibold tracking-[0.16em] text-white/70 uppercase">
-              Vagas se esgotando
+              Entre agora
             </p>
             <h2 className="font-display relative mt-4 max-w-[12ch] text-4xl italic tracking-tight sm:text-5xl md:text-6xl">
               Não fique de fora. Entra!
             </h2>
             <p className="relative mt-4 max-w-[42ch] text-base leading-relaxed text-white/80 md:text-lg">
-              Cada dia fora do grupo é um desconto de tênis que você perdeu. Entra agora antes
-              que as vagas acabem.
+              Oferta boa de tênis some rápido. Quem está no grupo vê na hora e aproveita.
             </p>
             <div className="relative mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <GroupCta
                 label="Entrar no grupo agora"
                 placement="rodape"
-                className="btn-press inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-court sm:w-auto"
+                className="btn-press inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-full bg-white px-8 py-4 text-base font-semibold text-court sm:w-auto"
               />
               <p className="text-sm text-white/75">Grátis. Para sempre. Só ofertas de tênis.</p>
             </div>

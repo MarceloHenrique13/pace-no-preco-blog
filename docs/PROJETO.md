@@ -66,6 +66,8 @@ Objetivo: saber quantos visitantes da `/grupo` clicam em "Entrar no grupo".
 - Referências de leitura: CTR do link > 1% saudável; CPC do link < R$ 0,80 bom; meta de custo por membro R$ 2–3 (gasto ÷ novos membros do grupo).
 - Observação: no início houve CTR muito alto (5–8%) com poucos membros; a investigação passou por medir visitas reais e cliques no botão (itens da seção 5).
 - Pendências conhecidas: aviso de afiliado visível na página e na descrição do grupo; domínio próprio (permite link de exibição no anúncio e resolve o uso comercial no plano Hobby da Vercel); Pixel + evento `Lead`.
+- 16/11: posicionamentos corrigidos para manual (só Feed e Reels de IG e FB); antes estavam automáticos e ~72% do gasto de um conjunto foi para Audience Network. Histórico completo e métricas em `../GESTAO_ANUNCIOS.md`.
+- A `/grupo` não deve afirmar escassez que não existe (vagas, fila). Textos atuais: grupo gratuito, aviso na hora, sem compromisso.
 - Texto de anúncio: sempre no passado ("já achamos…"), sem prometer preço atual, sem logos de marca.
 
 ## 7. Armadilhas
