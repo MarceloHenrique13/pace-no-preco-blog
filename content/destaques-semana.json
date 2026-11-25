@@ -1,46 +1,46 @@
 {
-  "weekLabel": "10 a 16 de novembro",
-  "updatedAt": "2026-11-10",
+  "weekLabel": "16 a 22 de novembro",
+  "updatedAt": "2026-11-16",
   "shoes": [
     {
       "rank": 1,
-      "name": "Fila Racer Speedzone",
-      "brand": "Fila",
-      "affiliateUrl": "https://www.mercadolivre.com.br/fila-racer-speedzone",
-      "image": "/images/shoes/fila-racer.jpg",
-      "bestFor": "ritmos mais rápidos e treinos de qualidade"
+      "name": "Corre 5",
+      "brand": "Olympikus",
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/olympikus-corre-5.jpg",
+      "bestFor": "quem busca desempenho e conforto na corrida"
     },
     {
       "rank": 2,
-      "name": "Olympikus Corre 4",
-      "brand": "Olympikus",
-      "affiliateUrl": "https://www.mercadolivre.com.br/olympikus-corre-4",
-      "image": "/images/shoes/olympikus-corre.jpg",
-      "bestFor": "volume semanal crescente"
+      "name": "Vomero 18",
+      "brand": "Nike",
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/nike-vomero-18-preto.jpg",
+      "bestFor": "corridas do dia a dia com máximo amortecimento"
     },
     {
       "rank": 3,
-      "name": "ASICS Dynablast 5",
+      "name": "GEL-Nimbus 28",
       "brand": "ASICS",
-      "affiliateUrl": "https://www.mercadolivre.com.br/asics-dynablast-5",
-      "image": "/images/shoes/asics-dynablast.jpg",
-      "bestFor": "treinos regulares em asfalto"
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/asics-gel-nimbus-28.jpg",
+      "bestFor": "corridas longas com amortecimento alto"
     },
     {
       "rank": 4,
-      "name": "Mizuno Neo Aura",
+      "name": "Wave Stratos 4",
       "brand": "Mizuno",
-      "affiliateUrl": "https://www.mercadolivre.com.br/mizuno-neo-aura",
-      "image": "/images/shoes/mizuno-neo.jpg",
-      "bestFor": "treinos recreativos regulares"
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/mizuno-wave-stratos-4.jpg",
+      "bestFor": "treinos e o dia a dia com mais conforto"
     },
     {
       "rank": 5,
-      "name": "Olympikus Challenger 6",
-      "brand": "Olympikus",
-      "affiliateUrl": "https://www.mercadolivre.com.br/olympikus-challenger",
-      "image": "/images/shoes/olympikus-corre.jpg",
-      "bestFor": "iniciantes e uso cotidiano"
+      "name": "Supernova Rise 3",
+      "brand": "Adidas",
+      "affiliateUrl": "https://pendente.invalid/PENDENTE_LINK_AFILIADO",
+      "image": "/images/shoes/adidas-supernova-rise-3.jpg",
+      "bestFor": "corridas diárias com conforto e suporte"
     }
   ]
 }
